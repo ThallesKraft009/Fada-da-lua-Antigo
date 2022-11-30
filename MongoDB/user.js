@@ -4,6 +4,14 @@ const userset = new Schema({
   userID: { type: String },
   uid: { type: String, default: null },
   estrelas: { type: Number, default: 0 },
+  figurinhas: {
+    total: { type: Number, default: 0 },
+    comum: { type: Number, default: 0 },
+    incomum: { type: Number, default: 0 },
+    raro: { type: Number, default: 0 },
+    epico: { type: Number, default: 0 },
+    lendario: { type: Number, default: 0 },
+  },
 
   rpg: {
     mundo: { type: String },
@@ -71,8 +79,11 @@ const userset = new Schema({
 
   tempo: {
     daily: { type: Number, default: 0 }
-  }
+  },
+
+  
+  
 });
 
 
-module.exports = model("Usuarios", userset);
+module.exports = model("Usuarios", userset); 
