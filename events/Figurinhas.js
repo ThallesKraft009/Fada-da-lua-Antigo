@@ -41,17 +41,140 @@ const botao = new ActionRowBuilder().addComponents(
           .setDisabled(false),
 			);
 
+  if (interaction.customId === `comprar1_${interaction.user.id}`){
 
+    let userdb = await client.userdb.findOne({
+         userID: interaction.user.id
+     }) 
+
+      if(!userdb){
+         let newuser = new client.userdb({ userID: interaction.user.id})
+        await  newuser.save();
+         
+         userdb = client.userdb.findOne({ userID: interaction.user.id })
+      }
+
+await interaction.deferUpdate()
+
+  if (userdb.rpg.money < 500) return interaction.reply({
+    content: `Você não tem 500 mini moedas!`,
+    ephemeral: true
+  })
+
+    
+    
+
+await client.userdb.updateOne({
+         userID: interaction.user.id
+     }, { $set: {
+         "rpg.money": userdb.rpg.money - 500,
+         "figurinhas.total": userdb.figurinhas.total + 1
+         }
+        })
+
+  interaction.editReply({
+    content: `Você comprou 1 figurinha!`,
+    components: []
+  })
+
+  }
+
+    if (interaction.customId === `comprar2_${interaction.user.id}`){
+
+    let userdb = await client.userdb.findOne({
+         userID: interaction.user.id
+     }) 
+
+      if(!userdb){
+         let newuser = new client.userdb({ userID: interaction.user.id})
+        await  newuser.save();
+         
+         userdb = client.userdb.findOne({ userID: interaction.user.id })
+      }
+
+await interaction.deferUpdate()
+
+  if (userdb.rpg.money < 2500) return interaction.reply({
+    content: `Você não tem 2500 mini moedas!`,
+    ephemeral: true
+  })
+
+    
+    
+
+await client.userdb.updateOne({
+         userID: interaction.user.id
+     }, { $set: {
+         "rpg.money": userdb.rpg.money - 2500,
+         "figurinhas.total": userdb.figurinhas.total + 5
+         }
+        })
+
+  interaction.editReply({
+    content: `Você comprou 5 figurinha!`,
+    components: []
+  })
+
+  }
+
+    if (interaction.customId === `comprar3_${interaction.user.id}`){
+
+    let userdb = await client.userdb.findOne({
+         userID: interaction.user.id
+     }) 
+
+      if(!userdb){
+         let newuser = new client.userdb({ userID: interaction.user.id})
+        await  newuser.save();
+         
+         userdb = client.userdb.findOne({ userID: interaction.user.id })
+      }
+
+await interaction.deferUpdate()
+
+  if (userdb.rpg.money < 5000) return interaction.reply({
+    content: `Você não tem 5000 mini moedas!`,
+    ephemeral: true
+  })
+
+    
+    
+
+await client.userdb.updateOne({
+         userID: interaction.user.id
+     }, { $set: {
+         "rpg.money": userdb.rpg.money - 5000,
+         "figurinhas.total": userdb.figurinhas.total + 10
+         }
+        })
+
+  interaction.editReply({
+    content: `Você comprou 10 figurinha!`,
+    components: []
+  })
+
+    }
 
 if (interaction.customId === `figurinhas_${interaction.user.id}`){
 
   await interaction.deferUpdate()
 
+let userdb = await client.userdb.findOne({
+         userID: interaction.user.id
+     }) 
+
+      if(!userdb){
+         let newuser = new client.userdb({ userID: interaction.user.id})
+        await  newuser.save();
+         
+         userdb = client.userdb.findOne({ userID: interaction.user.id })
+      }
+  
 let comum = ["Popo", "Christopher", "Eva", "Fluttershy", "Garçonete Doce", "Gata corrida", "Joey", "Lancelot", "Mecha meow", "Lynn", "Lilith", "Mini Beat", "Mini T", "Ninja sapo", "Ninja vermelho", "Raul", "Rose", "Zhanlang"];
 
 let incomum = ["Abóbora", "Arell", "Capitão Teach", "Christopher", "Fluttershy", "Fluttershy", "Jinyi", "Kaka", "Lucas", "Mary", "Mecha meow", "Sakura"];
 
-let raro = ["Assassin An", "Assassin Li", "Carol", "Erlang", "Fada", "Fluttershy", "Gata corrida", "Mary mapa", "Mini Beat Disco", "Sakura evoluída", "Suko com suko", "Transformers amarelo", "Transformers cinza"];
+let raro = ["Assassin An", "Assassin Li",  "Fluttershy", "Erlang", "Gata corrida", "Mary mapa"];
 
 let epico = ["Carol", "Ellie", "Fada evoluída", "Fada da Lua", "Kaka", "Lancelot espada", "Sakura", "Transformers azul", "Transformers vermelho", "Vovô", "Xiaolou"];
 
@@ -59,16 +182,8 @@ let lendario = ["Eva", "Fada evoluída", "Fada da lua evoluída", "Lilith com ef
 
 let random = ["comum","incomum","comum","incomum","comum","incomum","comum","comum","incomum","comum","incomum","comum","comum","raro","comum", "raro","comum", "raro", "comum","epico", "epico", "lendario","comum","comum"];
 
-const userdb = await client.userdb.findOne({
-         userID: interaction.user.id
-     }) 
 
-      if(!userdb){
-         const newuser = new client.userdb({ userID: interaction.user.id})
-        await  newuser.save();
-         
-         userdb = client.userdb.findOne({ userID: interaction.user.id })
-}
+
 
 let escolha = random[Math.floor(Math.random() * random.length)];
   
@@ -77,6 +192,14 @@ if (escolha === `comum`){
   let figurinha = comum[Math.floor(Math.random() * comum.length)];
 
   await db.set(interaction.user.id + "-" + escolha + "-" + figurinha, true)
+
+  await client.userdb.updateOne({
+         userID: interaction.user.id
+     }, { $set: {
+         "figurinhas.total": userdb.figurinhas.total - 1,
+  "figurinhas.comum": userdb.figurinhas.comum + 1
+         }
+        })
 
 return interaction.editReply({
   content: `${interaction.user} você conseguiu uma figurinha **Comum** que é __${figurinha}__`,
@@ -89,6 +212,14 @@ if (escolha === `incomum`){
     let figurinha = incomum[Math.floor(Math.random() * incomum.length)];
 
   await db.set(interaction.user.id + "-" + escolha + "-" + figurinha, true)
+
+  await client.userdb.updateOne({
+         userID: interaction.user.id
+     }, { $set: {
+         "figurinhas.total": userdb.figurinhas.total - 1,
+  "figurinhas.incomum": userdb.figurinhas.incomum + 1
+         }
+        })
   
 return interaction.editReply({
   content: `${interaction.user} você conseguiu uma figurinha **Incomum** que é __${figurinha}__`,
@@ -100,6 +231,14 @@ if (escolha === `raro`){
 
   await db.set(interaction.user.id + "-" + escolha + "-" + figurinha, true)
 
+  await client.userdb.updateOne({
+         userID: interaction.user.id
+     }, { $set: {
+         "figurinhas.total": userdb.figurinhas.total - 1,
+  "figurinhas.raro": userdb.figurinhas.raro + 1
+         }
+        })
+
 return interaction.editReply({
   content: `${interaction.user} você conseguiu uma figurinha **Raro** que é __${figurinha}__`,
   components: []
@@ -110,6 +249,14 @@ if (escolha === `epico`){
 
 
   await db.set(interaction.user.id + "-" + escolha + "-" + figurinha, true)
+
+  await client.userdb.updateOne({
+         userID: interaction.user.id
+     }, { $set: {
+         "figurinhas.total": userdb.figurinhas.total - 1,
+  "figurinhas.epico": userdb.figurinhas.epico + 1
+         }
+        })
   
 return interaction.editReply({
   content: `${interaction.user} você conseguiu uma figurinha **Épico** que é __${figurinha}__`,
@@ -120,6 +267,14 @@ if (escolha === `lendario`){
   let figurinha = lendario[Math.floor(Math.random() * lendario.length)];
 
 await db.set(interaction.user.id + "-" + escolha + "-" + figurinha, true)
+
+  await client.userdb.updateOne({
+         userID: interaction.user.id
+     }, { $set: {
+         "figurinhas.total": userdb.figurinhas.total - 1,
+  "figurinhas.lendario": userdb.figurinhas.lendario + 1
+         }
+        })
          
 return interaction.editReply({
   content: `${interaction.user} você conseguiu uma figurinha **Lendário** que é __${figurinha}__`,
@@ -635,4 +790,383 @@ let pg = new ActionRowBuilder().addComponents(
    interaction.editReply({ content: `${interaction.user}`, files: [attachment], components: [pg] })
     
       }
+
+
+
+
+
+
+      if (interaction.customId === `figurinhasRaro_${interaction.user.id}` || interaction.customId === `raro1_${interaction.user.id}`){
+    await interaction.deferUpdate()
+
+    let figurinha1 = await Canvas.loadImage("https://cdn.discordapp.com/attachments/1028756005556846632/1047662103017824256/44.png");
+
+  let figurinha1v = await db.get(interaction.user.id + "-" + "raro" + "-" + "Assassin An")
+
+    let figurinha2 = await Canvas.loadImage("https://cdn.discordapp.com/attachments/1028756005556846632/1047662475006455918/45.png");
+
+  let figurinha2v = await db.get(interaction.user.id + "-" + "raro" + "-" + "Assassin Li")
+
+    let figurinha3 = await Canvas.loadImage("https://cdn.discordapp.com/attachments/1028756005556846632/1047663308808912946/53.png");
+
+  let figurinha3v = await db.get(interaction.user.id + "-" + "raro" + "-" + "Erlang")
+
+
+let figurinha4 = await Canvas.loadImage("https://cdn.discordapp.com/attachments/1028756005556846632/1047663794526109717/49.png");
+
+  let figurinha4v = await db.get(interaction.user.id + "-" + "raro" + "-" + "Fluttershy")
+
+    let figurinha5 = await Canvas.loadImage("https://cdn.discordapp.com/attachments/1028756005556846632/1047664152769986590/51.png");
+
+  let figurinha5v = await db.get(interaction.user.id + "-" + "raro" + "-" + "Gata corrida")
+
+    let figurinha6 = await Canvas.loadImage("https://cdn.discordapp.com/attachments/1028756005556846632/1047664575581016095/46.png");
+
+  let figurinha6v = await db.get(interaction.user.id + "-" + "raro" + "-" + "Mary mapa")
+
+
+ let canvas = Canvas.createCanvas(700, 450)
+let ctx = canvas.getContext("2d")
+    
+    let background = await Canvas.loadImage(`https://cdn.discordapp.com/attachments/911729113801293845/1045337163446898800/image-3.png`)
+    
+    ctx.drawImage(background, 0, 0, canvas.width, canvas.height)
+
+ctx.strokeStyle = '#0099ff';
+	ctx.strokeRect(0, 0, canvas.width, canvas.height);
+
+	
+
+   if (figurinha1v === true) ctx.drawImage(figurinha1, 120, 125, 118, 135);
+
+
+
+    if (figurinha2v === true) ctx.drawImage(figurinha2, 290, 125, 118, 135);
+
+    if (figurinha3v === true) ctx.drawImage(figurinha3, 460, 125, 118, 135);
+
+    if (figurinha4v === true) ctx.drawImage(figurinha4, 120, 290, 118, 135);
+
+    if (figurinha5v === true)  ctx.drawImage(figurinha5, 290, 290, 118, 135);
+
+if (figurinha6v === true) ctx.drawImage(figurinha6, 460, 290, 118, 135);
+
+	ctx.beginPath();
+
+	ctx.arc(120, 120, 100, 0, Math.PI * 2, true);
+
+	ctx.closePath();
+
+	
+  
+ctx.save()
+
+    let attachment = new Discord.AttachmentBuilder(canvas.toBuffer(), {name: 'album.png'}) 
+
+  
+let pg = new ActionRowBuilder().addComponents(
+      
+  new ButtonBuilder()
+					.setCustomId(`raro1_${interaction.user.id}`)
+					.setLabel('1')
+					.setStyle(ButtonStyle.Primary)
+          .setDisabled(true),
+  new ButtonBuilder()
+					.setCustomId(`voltar_${interaction.user.id}`)
+					.setLabel('Voltar')
+					.setStyle(ButtonStyle.Primary)
+          .setDisabled(false),
+  )
+
+
+   interaction.editReply({ content: `${interaction.user}`, files: [attachment], components: [pg] })
+    
+                                 }
+
+                                                                                                                
+
+    
+
+
+    if (interaction.customId === `figurinhasEpico_${interaction.user.id}` || interaction.customId === `epico1_${interaction.user.id}`){
+    await interaction.deferUpdate()
+
+    let figurinha1 = await Canvas.loadImage("https://cdn.discordapp.com/attachments/1028756005556846632/1047667413602275419/56.png");
+
+  let figurinha1v = await db.get(interaction.user.id + "-" + "epico" + "-" + "Abóbora")
+
+    let figurinha2 = await Canvas.loadImage("https://cdn.discordapp.com/attachments/1028756005556846632/1047667893283860630/58.png");
+
+  let figurinha2v = await db.get(interaction.user.id + "-" + "epico" + "-" + "Carol")
+
+    let figurinha3 = await Canvas.loadImage("https://cdn.discordapp.com/attachments/1028756005556846632/1047939640964956260/63.png");
+
+  let figurinha3v = await db.get(interaction.user.id + "-" + "epico" + "-" + "Fada evoluída")
+
+
+let figurinha4 = await Canvas.loadImage("https://cdn.discordapp.com/attachments/1028756005556846632/1047940062568009758/66.png");
+
+  let figurinha4v = await db.get(interaction.user.id + "-" + "epico" + "-" + "Fada da Lua")
+
+    let figurinha5 = await Canvas.loadImage("https://cdn.discordapp.com/attachments/1028756005556846632/1047940388285071441/64.png");
+
+  let figurinha5v = await db.get(interaction.user.id + "-" + "epico" + "-" + "Kaka")
+
+    let figurinha6 = await Canvas.loadImage("https://cdn.discordapp.com/attachments/1028756005556846632/1047940826094899300/61.png");
+
+  let figurinha6v = await db.get(interaction.user.id + "-" + "epico" + "-" + "Lancelot espada")
+
+
+ let canvas = Canvas.createCanvas(700, 450)
+let ctx = canvas.getContext("2d")
+    
+    let background = await Canvas.loadImage(`https://cdn.discordapp.com/attachments/911729113801293845/1045337163446898800/image-3.png`)
+    
+    ctx.drawImage(background, 0, 0, canvas.width, canvas.height)
+
+ctx.strokeStyle = '#0099ff';
+	ctx.strokeRect(0, 0, canvas.width, canvas.height);
+
+	
+
+   if (figurinha1v === true) ctx.drawImage(figurinha1, 120, 125, 118, 135);
+
+
+
+    if (figurinha2v === true) ctx.drawImage(figurinha2, 290, 125, 118, 135);
+
+    if (figurinha3v === true) ctx.drawImage(figurinha3, 460, 125, 118, 135);
+
+    if (figurinha4v === true) ctx.drawImage(figurinha4, 120, 290, 118, 135);
+
+    if (figurinha5v === true)  ctx.drawImage(figurinha5, 290, 290, 118, 135);
+
+if (figurinha6v === true) ctx.drawImage(figurinha6, 460, 290, 118, 135);
+
+	ctx.beginPath();
+
+	ctx.arc(120, 120, 100, 0, Math.PI * 2, true);
+
+	ctx.closePath();
+
+	
+  
+ctx.save()
+
+    let attachment = new Discord.AttachmentBuilder(canvas.toBuffer(), {name: 'album.png'}) 
+
+  
+let pg = new ActionRowBuilder().addComponents(
+      
+  new ButtonBuilder()
+					.setCustomId(`epico1_${interaction.user.id}`)
+					.setLabel('1')
+					.setStyle(ButtonStyle.Primary)
+          .setDisabled(true),
+  new ButtonBuilder()
+					.setCustomId(`epico2_${interaction.user.id}`)
+					.setLabel('2')
+					.setStyle(ButtonStyle.Primary)
+          .setDisabled(false),
+  new ButtonBuilder()
+					.setCustomId(`voltar_${interaction.user.id}`)
+					.setLabel('Voltar')
+					.setStyle(ButtonStyle.Primary)
+          .setDisabled(false),
+  )
+
+
+   interaction.editReply({ content: `${interaction.user}`, files: [attachment], components: [pg] })
+    
+    }
+
+  
+
+
+
+        if (interaction.customId === `epico2_${interaction.user.id}`){
+    await interaction.deferUpdate()
+
+    let figurinha1 = await Canvas.loadImage("https://cdn.discordapp.com/attachments/1028756005556846632/1047941994313437325/59.png");
+
+  let figurinha1v = await db.get(interaction.user.id + "-" + "epico" + "-" + "Sakura (guarda chuva)")
+
+    let figurinha2 = await Canvas.loadImage("https://cdn.discordapp.com/attachments/1028756005556846632/1047942340075077742/67.png");
+
+  let figurinha2v = await db.get(interaction.user.id + "-" + "epico" + "-" + "Transformers azul (raio)")
+
+    let figurinha3 = await Canvas.loadImage("https://cdn.discordapp.com/attachments/1028756005556846632/1047942702530039899/57.png");
+
+  let figurinha3v = await db.get(interaction.user.id + "-" + "epico" + "-" + "Transformers vermelho (carro)")
+
+
+let figurinha4 = await Canvas.loadImage("https://cdn.discordapp.com/attachments/1028756005556846632/1047943072245350472/60.png");
+
+  let figurinha4v = await db.get(interaction.user.id + "-" + "epico" + "-" + "Vovô")
+
+    let figurinha5 = await Canvas.loadImage("https://cdn.discordapp.com/attachments/1028756005556846632/1047943429411307560/62.png");
+
+  let figurinha5v = await db.get(interaction.user.id + "-" + "epico" + "-" + "Xiaolou")
+
+    let figurinha6 = await Canvas.loadImage("https://cdn.discordapp.com/attachments/1028756005556846632/1047940826094899300/61.png");
+
+  let figurinha6v = await db.get(interaction.user.id + "-" + "epico" + "-" + "Lancelot espada")
+
+
+ let canvas = Canvas.createCanvas(700, 450)
+let ctx = canvas.getContext("2d")
+    
+    let background = await Canvas.loadImage(`https://cdn.discordapp.com/attachments/911729113801293845/1045337163446898800/image-3.png`)
+    
+    ctx.drawImage(background, 0, 0, canvas.width, canvas.height)
+
+ctx.strokeStyle = '#0099ff';
+	ctx.strokeRect(0, 0, canvas.width, canvas.height);
+
+	
+
+   if (figurinha1v === true) ctx.drawImage(figurinha1, 120, 125, 118, 135);
+
+
+
+    if (figurinha2v === true) ctx.drawImage(figurinha2, 290, 125, 118, 135);
+
+    if (figurinha3v === true) ctx.drawImage(figurinha3, 460, 125, 118, 135);
+
+    if (figurinha4v === true) ctx.drawImage(figurinha4, 120, 290, 118, 135);
+
+    if (figurinha5v === true)  ctx.drawImage(figurinha5, 290, 290, 118, 135);
+
+if (figurinha6v === true) ctx.drawImage(figurinha6, 460, 290, 118, 135);
+
+	ctx.beginPath();
+
+	ctx.arc(120, 120, 100, 0, Math.PI * 2, true);
+
+	ctx.closePath();
+
+	
+  
+ctx.save()
+
+    let attachment = new Discord.AttachmentBuilder(canvas.toBuffer(), {name: 'album.png'}) 
+
+  
+let pg = new ActionRowBuilder().addComponents(
+      
+  new ButtonBuilder()
+					.setCustomId(`epico1_${interaction.user.id}`)
+					.setLabel('1')
+					.setStyle(ButtonStyle.Primary)
+          .setDisabled(false),
+  new ButtonBuilder()
+					.setCustomId(`epico2_${interaction.user.id}`)
+					.setLabel('2')
+					.setStyle(ButtonStyle.Primary)
+          .setDisabled(true),
+  new ButtonBuilder()
+					.setCustomId(`voltar_${interaction.user.id}`)
+					.setLabel('Voltar')
+					.setStyle(ButtonStyle.Primary)
+          .setDisabled(false),
+  )
+
+
+   interaction.editReply({ content: `${interaction.user}`, files: [attachment], components: [pg] })
+    
+}
+
+
+
+
+
+
+
+      if (interaction.customId === `figurinhasLendadio_${interaction.user.id}`){
+    await interaction.deferUpdate()
+
+    let figurinha1 = await Canvas.loadImage("https://cdn.discordapp.com/attachments/1028756005556846632/1047944509834666015/68.png");
+
+  let figurinha1v = await db.get(interaction.user.id + "-" + "lendario" + "-" + "Eva")
+
+    let figurinha2 = await Canvas.loadImage("https://cdn.discordapp.com/attachments/1028756005556846632/1047944982423670925/69.png");
+
+  let figurinha2v = await db.get(interaction.user.id + "-" + "lendario" + "-" + "Fada evoluída")
+
+    let figurinha3 = await Canvas.loadImage("https://cdn.discordapp.com/attachments/1028756005556846632/1047945384967815179/70.png");
+
+  let figurinha3v = await db.get(interaction.user.id + "-" + "lendario" + "-" + "Fada da lua evoluída")
+
+
+let figurinha4 = await Canvas.loadImage("https://cdn.discordapp.com/attachments/1028756005556846632/1047946954065317939/71.png");
+
+  let figurinha4v = await db.get(interaction.user.id + "-" + "lendario" + "-" + "Lilith com efeito")
+
+    let figurinha5 = await Canvas.loadImage("https://cdn.discordapp.com/attachments/1028756005556846632/1047947349995048980/72.png");
+
+  let figurinha5v = await db.get(interaction.user.id + "-" + "lendario" + "-" + "Misra")
+/*
+    let figurinha6 = await Canvas.loadImage("");
+
+  let figurinha6v = await db.get(interaction.user.id + "-" + "incomum" + "-" + "")*/
+
+
+ let canvas = Canvas.createCanvas(700, 450)
+let ctx = canvas.getContext("2d")
+    
+    let background = await Canvas.loadImage(`https://cdn.discordapp.com/attachments/911729113801293845/1047647907777630278/image-4.png`)
+    
+    ctx.drawImage(background, 0, 0, canvas.width, canvas.height)
+
+ctx.strokeStyle = '#0099ff';
+	ctx.strokeRect(0, 0, canvas.width, canvas.height);
+
+	
+
+   if (figurinha1v === true) ctx.drawImage(figurinha1, 120, 125, 118, 135);
+
+
+
+    if (figurinha2v === true) ctx.drawImage(figurinha2, 290, 125, 118, 135);
+
+    if (figurinha3v === true) ctx.drawImage(figurinha3, 460, 125, 118, 135);
+
+    if (figurinha4v === true) ctx.drawImage(figurinha4, 200, 290, 118, 135);
+
+    if (figurinha5v === true)  ctx.drawImage(figurinha5, 380, 290, 118, 135);
+/*
+if (figurinha6v === true) ctx.drawImage(figurinha6, 460, 290, 118, 135);*/
+
+	ctx.beginPath();
+
+	ctx.arc(120, 120, 100, 0, Math.PI * 2, true);
+
+	ctx.closePath();
+
+	
+  
+ctx.save()
+
+    let attachment = new Discord.AttachmentBuilder(canvas.toBuffer(), {name: 'album.png'}) 
+
+  
+let pg = new ActionRowBuilder().addComponents(
+      
+  new ButtonBuilder()
+					.setCustomId(`lendario1_${interaction.user.id}`)
+					.setLabel('1')
+					.setStyle(ButtonStyle.Primary)
+          .setDisabled(true),
+  
+  new ButtonBuilder()
+					.setCustomId(`voltar_${interaction.user.id}`)
+					.setLabel('Voltar')
+					.setStyle(ButtonStyle.Primary)
+          .setDisabled(false),
+  )
+
+
+   interaction.editReply({ content: `${interaction.user}`, files: [attachment], components: [pg] })
+    
+  }
 })
